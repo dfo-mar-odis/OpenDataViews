@@ -17,9 +17,11 @@ require(ggplot2)
 require(plotly)
 require(dplyr)
 ```
+The data comes from [Open Government Analytics](https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412)
+
+
 # Open Map Views
-Count of the number of times a map was viewed using the Open Maps Viewer
-https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/15eeafa2-c331-44e7-b37f-d0d54a51d2eb
+[Count of the number of times a map was viewed using the Open Maps Viewer](https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/15eeafa2-c331-44e7-b37f-d0d54a51d2eb)
 
 ## Maritime's Data
 
@@ -95,7 +97,7 @@ ggplot(sumdata,aes(x = date,y = `Total Views per Month`,fill = Source)) +
 ```
 
 
-# All Data
+## All Data
 
 ```{r}
 req <- request("https://open.canada.ca/data/en/api/action/datastore_search_sql")
@@ -130,8 +132,8 @@ sumdata <- data |>
 
 # Number of visits
 
-https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/c14ba36b-0af5-4c59-a5fd-26ca6a1ef6db
-
+[Number of visits](https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/c14ba36b-0af5-4c59-a5fd-26ca6a1ef6db)
+All data but plotting Maritimes only:
 
 ```{r}
 req <- request("https://open.canada.ca/data/en/api/action/datastore_search_sql")
@@ -166,8 +168,8 @@ ggplotly()
 
 # Number of downloads
 
-https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/4ebc050f-6c3c-4dfd-817e-875b2caf3ec6
-
+[Number of downloads](https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/4ebc050f-6c3c-4dfd-817e-875b2caf3ec6)
+All data but plotting Maritimes only:
 
 ```{r}
 req <- request("https://open.canada.ca/data/en/api/action/datastore_search_sql")
