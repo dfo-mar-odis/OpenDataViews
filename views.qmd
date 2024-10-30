@@ -2,6 +2,9 @@
 title: "Open Data Views"
 format: 
   html:
+    toc: true
+    code-fold: true
+    code-summary: "Show the code"
     self-contained: true
 knitr:
   opts_chunk:
@@ -14,7 +17,9 @@ require(ggplot2)
 require(plotly)
 require(dplyr)
 ```
-
+# Open Map Views
+Count of the number of times a map was viewed using the Open Maps Viewer
+https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/15eeafa2-c331-44e7-b37f-d0d54a51d2eb
 
 ## Maritime's Data
 
@@ -90,7 +95,7 @@ ggplot(sumdata,aes(x = date,y = `Total Views per Month`,fill = Source)) +
 ```
 
 
-## All Data
+# All Data
 
 ```{r}
 req <- request("https://open.canada.ca/data/en/api/action/datastore_search_sql")
@@ -111,7 +116,7 @@ sumdata <- data |>
   group_by(title_en,Region) |> 
   reframe(totalviews=sum(as.numeric(pageviews)))
 
-(ggplot(sumdata |> filter(totalviews>50),
+(ggplot(sumdata,
         aes(x = title_en,y = totalviews, fill = Region)) +
     geom_col()+
     coord_flip()+
@@ -123,3 +128,74 @@ sumdata <- data |>
 
 ```
 
+# Number of visits
+
+https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/c14ba36b-0af5-4c59-a5fd-26ca6a1ef6db
+
+
+```{r}
+req <- request("https://open.canada.ca/data/en/api/action/datastore_search_sql")
+result <- req|>
+  req_body_json(list(
+    sql = "SELECT * FROM \"c14ba36b-0af5-4c59-a5fd-26ca6a1ef6db\" WHERE department LIKE 'Fisheries and Oceans Canada'")) |>
+  req_perform() |>
+  resp_body_json()
+
+data <- result$result$records |> 
+  lapply(as.data.frame) |> 
+  bind_rows() |> 
+  mutate(Region=if_else(id %in% pubs$uuid,
+                 "Maritimes",
+                 "Other"))
+
+sumdata <- data |> 
+  group_by(title,Region) |> 
+  reframe(totalvisits=sum(as.numeric(visits_visites)))
+
+(ggplot(sumdata |> filter(Region == "Maritimes"),
+        aes(x = title,y = totalvisits)) +
+    geom_col()+
+    coord_flip()+
+    theme_classic()+
+    theme(axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())+
+    scale_y_continuous(expand = expansion(mult = c(0,0.1)))) |> 
+ggplotly()
+
+```
+
+# Number of downloads
+
+https://open.canada.ca/data/en/dataset/2916fad5-ebcc-4c86-b0f3-4f619b29f412/resource/4ebc050f-6c3c-4dfd-817e-875b2caf3ec6
+
+
+```{r}
+req <- request("https://open.canada.ca/data/en/api/action/datastore_search_sql")
+result <- req|>
+  req_body_json(list(
+    sql = "SELECT * FROM \"4ebc050f-6c3c-4dfd-817e-875b2caf3ec6\" WHERE department LIKE 'Fisheries and Oceans Canada'")) |>
+  req_perform() |>
+  resp_body_json()
+
+data <- result$result$records |> 
+  lapply(as.data.frame) |> 
+  bind_rows() |> 
+  mutate(Region=if_else(id %in% pubs$uuid,
+                 "Maritimes",
+                 "Other"))
+
+sumdata <- data |> 
+  group_by(title,Region) |> 
+  reframe(totaldownloads=sum(as.numeric(downloads_telechargements)))
+
+(ggplot(sumdata |> filter(Region == "Maritimes"),
+        aes(x = title,y = totaldownloads)) +
+    geom_col()+
+    coord_flip()+
+    theme_classic()+
+    theme(axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())+
+    scale_y_continuous(expand = expansion(mult = c(0,0.1)))) |> 
+ggplotly()
+
+```
